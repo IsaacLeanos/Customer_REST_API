@@ -9,6 +9,7 @@ server.use(restify.plugins.bodyParser());
 
 // server
 server.listen(config.PORT,()=>{
+    mongoose.set('useFindAndModify',false);
     mongoose.connect(config.MONGODB_URI,{useNewUrlParser:true});
     console.log('Server up up and away!');
 });
@@ -24,5 +25,6 @@ db.on('error',(e)=>{
 db.once('open',()=>{
     // ?
     require('./route/customers')(server);
+    require('./route/users')(server);
     console.log(`Mongo up up and away on port ${config.PORT}!`);
 });
