@@ -29,14 +29,14 @@ module.exports=server=>{
 
     });
 
-    //auth user
+    //authentication
     server.post('/auth',async(req,res,next)=>{
         const{email,password}=req.body;
 
         try{
             //authenticate user
             const user=auth.authenticate(email,password);
-            console.log(user);
+            console.log('authenticated user',user);
             next();
 
         }catch(e){
