@@ -1,11 +1,15 @@
 const restify=require('restify');
 const mongoose=require('mongoose');
 const config=require('./config');
+const restjwt=require('restify-jwt-community');
 
 const server=restify.createServer();
 
 // middleware
 server.use(restify.plugins.bodyParser());
+
+//protect routes
+// server.use(restjwt({secret:config.JWT_SECRET}).unless({path:['/auth']}));
 
 // server
 server.listen(config.PORT,()=>{
@@ -23,7 +27,7 @@ db.on('error',(e)=>{
 
 //successful mongo connection
 db.once('open',()=>{
-    // ?
+    // run server exported function
     require('./route/customers')(server);
     require('./route/users')(server);
     console.log(`Mongo up up and away on port ${config.PORT}!`);

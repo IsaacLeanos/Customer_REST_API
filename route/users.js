@@ -1,7 +1,9 @@
 const errors=require('restify-errors');
 const bcrypt=require('bcryptjs');
+const jwt=require('jsonwebtoken');
 const User=require('../model/User');
 const auth=require('../auth');
+const config=require('../config');
 
 module.exports=server=>{
     // register users
@@ -35,8 +37,15 @@ module.exports=server=>{
 
         try{
             //authenticate user
-            const user=auth.authenticate(email,password);
-            console.log('authenticated user',user);
+            const user=await auth.authenticate(email,password);
+
+            //create jwt
+            const token=jwt.sign(user.toJSON(),config.JWT_SECRET,{expiresIn:'15m'});
+
+            const{iat,exp}=jwt.decode(token);
+            //response with token
+            res.send({iat,exp,token});
+
             next();
 
         }catch(e){
